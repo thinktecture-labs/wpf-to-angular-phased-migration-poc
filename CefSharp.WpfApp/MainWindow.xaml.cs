@@ -12,10 +12,11 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using MahApps.Metro.Controls;
 
 namespace CefSharp.WpfApp;
 
-public sealed partial class MainWindow : Window
+public sealed partial class MainWindow : MetroWindow
 {
     public MainWindow() => InitializeComponent();
 }

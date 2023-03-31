@@ -26,17 +26,9 @@ public sealed partial class App : Application
     {
         base.OnStartup(e);
 
-        using (ServiceProvider.GetRequiredService<ChronometerFactory>().Create("Chromium Embedded Framework initialization"))
-        {
-            // It's important that Initialize/Shutdown MUST be called on your main application thread (typically the UI thread).
-            // If you call them on different threads, your application will hang.
-            ChromiumEmbedded.Initialize();
-        }
-
         var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
         MainWindow = mainWindow;
         MainWindow.Show();
-        mainWindow.ChromiumWebBrowser.Load("https://duckduckgo.com/");
     }
 
     protected override void OnExit(ExitEventArgs e) => ServiceProvider.Dispose();
