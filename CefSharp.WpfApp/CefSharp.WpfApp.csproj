@@ -12,9 +12,12 @@
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
         <PackageReference Include="Serilog.Sinks.Debug" Version="2.0.0" />
         <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
+        <PackageReference Include="Microsoft.Extensions.Http" Version="7.0.0" />
         <PackageReference Include="MaterialDesignThemes" Version="4.8.0" />
         <PackageReference Include="MahApps.Metro" Version="2.4.9" />
         <PackageReference Include="MaterialDesignThemes.MahApps" Version="0.2.8" />
+        <PackageReference Include="Light.ViewModels" Version="0.7.0" />
+        
     </ItemGroup>
 
 </Project>
