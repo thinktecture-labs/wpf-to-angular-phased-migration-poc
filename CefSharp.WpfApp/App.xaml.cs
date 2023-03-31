@@ -26,7 +26,7 @@ public sealed partial class App : Application
         MainWindow.Show();
         
         ServiceProvider.GetRequiredService<NavigateToContactsListCommand>()
-                       .NavigateToContactList();
+                       .Navigate();
     }
 
     protected override void OnExit(ExitEventArgs e) => ServiceProvider.Dispose();

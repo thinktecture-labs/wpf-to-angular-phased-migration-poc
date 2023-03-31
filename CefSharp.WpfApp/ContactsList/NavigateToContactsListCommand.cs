@@ -15,7 +15,7 @@ public sealed class NavigateToContactsListCommand
     private INavigator Navigator { get; }
     private Func<ContactListViewModel> CreateContactListViewModel { get; }
 
-    public async void NavigateToContactList()
+    public async void Navigate()
     {
         var viewModel = CreateContactListViewModel();
         var view = new ContactListView(viewModel);
