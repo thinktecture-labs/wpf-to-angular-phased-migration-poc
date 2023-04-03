@@ -28,7 +28,7 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch">
-                <Button>
+                <Button Command="{Binding CreateContactCommand, Mode=OneTime}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Add"
                                                  Width="24"

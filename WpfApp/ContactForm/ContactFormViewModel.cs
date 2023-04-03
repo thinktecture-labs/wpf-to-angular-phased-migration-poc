@@ -16,7 +16,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
     private DateTime? _dateOfBirth;
 
     public ContactFormViewModel(Contact contact,
-                                NavigateToContactsListCommand navigateToContactsListCommand,
+                                INavigateToContactsListCommand navigateToContactsListCommand,
                                 Func<IContactFormSession> createSession,
                                 ILogger logger)
     {
@@ -35,7 +35,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
     }
     
     private Contact Contact { get; }
-    private NavigateToContactsListCommand NavigateToContactsListCommand { get; }
+    private INavigateToContactsListCommand NavigateToContactsListCommand { get; }
     private Func<IContactFormSession> CreateSession { get; }
     private ILogger Logger { get; }
 
@@ -163,6 +163,8 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         if (CheckForErrors())
             return;
 
+        IsInputEnabled = false;
+
         Contact.FirstName = FirstName;
         Contact.LastName = LastName;
         Contact.Email = Email;
@@ -171,7 +173,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         try
         {
             using var session = CreateSession();
-            
+
             if (Contact.Id == Guid.Empty)
             {
                 Contact.Id = Guid.NewGuid();
@@ -181,12 +183,16 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
             {
                 await session.UpdateContactAsync(Contact);
             }
-            
+
             NavigateToContactsListCommand.Navigate();
         }
         catch (Exception exception)
         {
             Logger.Error(exception, "Could not create or update contact");
+        }
+        finally
+        {
+            IsInputEnabled = true;
         }
     }
 }

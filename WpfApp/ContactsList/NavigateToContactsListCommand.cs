@@ -3,7 +3,7 @@ using WpfApp.Shared;
 
 namespace WpfApp.ContactsList;
 
-public sealed class NavigateToContactsListCommand
+public sealed class NavigateToContactsListCommand : INavigateToContactsListCommand
 {
     public NavigateToContactsListCommand(INavigator navigator,
                                          Func<ContactListViewModel> createContactListViewModel)

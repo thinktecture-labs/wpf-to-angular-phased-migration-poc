@@ -1,6 +1,7 @@
 ﻿using System;
 using Light.ViewModels;
 using Serilog;
+using WpfApp.ContactForm;
 using WpfApp.DeleteContactDialog;
 using WpfApp.EndlessScrolling;
 using WpfApp.Shared;
@@ -13,17 +14,21 @@ public sealed class ContactListViewModel : BaseNotifyPropertyChanged, IHasPaging
     private Contact? _selectedContact;
 
     public ContactListViewModel(Func<IContactsSession> createSession,
+                                INavigateToContactFormCommand navigateToContactFormCommand,
                                 IShowConfirmDeletionDialogCommand showConfirmDeletionDialogCommand,
                                 ILogger logger)
     {
+        NavigateToContactFormCommand = navigateToContactFormCommand;
         ShowConfirmDeletionDialogCommand = showConfirmDeletionDialogCommand;
         PagingViewModel = new (createSession, 30, new (string.Empty), logger);
 
+        CreateContactCommand = new (CreateContact);
         EditContactCommand = new (EditContact, () => SelectedContact is not null);
         DeleteContactCommand = new (DeleteContact, () => SelectedContact is not null);
     }
 
     public PagingViewModel<Contact, ContactListFilters> PagingViewModel { get; }
+    private INavigateToContactFormCommand NavigateToContactFormCommand { get; }
     private IShowConfirmDeletionDialogCommand ShowConfirmDeletionDialogCommand { get; }
 
     public Contact? SelectedContact
@@ -49,14 +54,18 @@ public sealed class ContactListViewModel : BaseNotifyPropertyChanged, IHasPaging
         }
     }
 
+    public DelegateCommand CreateContactCommand { get; }
     public DelegateCommand EditContactCommand { get; }
     public DelegateCommand DeleteContactCommand { get; }
 
     IPagingViewModel IHasPagingViewModel.PagingViewModel => PagingViewModel;
 
+    private void CreateContact() => NavigateToContactFormCommand.Navigate(new ());
+
     private void EditContact()
     {
-            
+        if (SelectedContact is not null)
+            NavigateToContactFormCommand.Navigate(SelectedContact);
     }
 
     private async void DeleteContact()

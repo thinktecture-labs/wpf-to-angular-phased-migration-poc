@@ -3,6 +3,7 @@ using Light.GuardClauses;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using WpfApp.ContactForm;
 using WpfApp.ContactsList;
 using WpfApp.DeleteContactDialog;
 using WpfApp.Http;
@@ -16,6 +17,7 @@ public static class DependencyInjection
         new ServiceCollection().AddCoreServices(configuration)
                                .AddMainWindow()
                                .AddContactList()
+                               .AddContactForm()
                                .AddDeleteContactDialog()
                                .BuildServiceProvider();
 

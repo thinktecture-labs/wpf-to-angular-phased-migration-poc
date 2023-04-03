@@ -26,7 +26,7 @@ public sealed partial class App : Application
         MainWindow = mainWindow;
         MainWindow.Show();
         
-        ServiceProvider.GetRequiredService<NavigateToContactsListCommand>()
+        ServiceProvider.GetRequiredService<INavigateToContactsListCommand>()
                        .Navigate();
     }
 

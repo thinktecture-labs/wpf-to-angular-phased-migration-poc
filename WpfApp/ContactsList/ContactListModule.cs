@@ -10,5 +10,5 @@ public static class ContactListModule
                 .AddTransient<Func<ContactListViewModel>>(sp => sp.GetRequiredService<ContactListViewModel>)
                 .AddTransient<IContactsSession, HttpContactsSession>()
                 .AddSingleton<Func<IContactsSession>>(sp => sp.GetRequiredService<IContactsSession>)
-                .AddSingleton<NavigateToContactsListCommand>();
+                .AddSingleton<INavigateToContactsListCommand, NavigateToContactsListCommand>();
 }
