@@ -1,4 +1,4 @@
-﻿using Backend.Contacts;
+﻿using Backend.ComponentSamples;
 using Backend.DataAccess;
 using Backend.Shared;
 using Microsoft.AspNetCore.Builder;
@@ -15,7 +15,7 @@ public static class DependencyInjection
         builder.Services
                .AddLightValidation()
                .AddDataAccess()
-               .AddContactEndpoints()
+               .AddComponentSampleEndpoints()
                .AddHealthChecks();
         return builder;
     }

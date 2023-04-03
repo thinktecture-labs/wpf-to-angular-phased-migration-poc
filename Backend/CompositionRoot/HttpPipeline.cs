@@ -1,4 +1,4 @@
-﻿using Backend.Contacts;
+﻿using Backend.ComponentSamples;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Hosting;
 using Serilog;
@@ -15,7 +15,7 @@ public static class HttpPipeline
         app.UseSerilogRequestLogging();
         app.UseRouting();
         app.MapHealthChecks("/");
-        app.MapContactEndpoints();
+        app.MapComponentSampleEndpoints();
 
         return app;
     }

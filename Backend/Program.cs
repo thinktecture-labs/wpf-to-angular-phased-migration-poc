@@ -20,9 +20,9 @@ public static class Program
                                     .Build()
                                     .ConfigureHttpPipeline();
 
-            var contactsContext = app.Services.GetRequiredService<ContactsContext>();
+            var componentSampleContext = app.Services.GetRequiredService<ComponentSampleContext>();
             await app.RunAsync();
-            contactsContext.WriteContactsToFileIfNecessary();
+            componentSampleContext.WriteSamplesToFileIfNecessary();
             return 0;
         }
         catch (Exception exception)
