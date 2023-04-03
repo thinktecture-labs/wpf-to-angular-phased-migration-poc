@@ -1,8 +1,8 @@
 ﻿using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
+using WpfApp.ComponentSampleList;
 using WpfApp.CompositionRoot;
-using WpfApp.ContactsList;
 
 namespace WpfApp;
 
@@ -26,7 +26,7 @@ public sealed partial class App : Application
         MainWindow = mainWindow;
         MainWindow.Show();
         
-        ServiceProvider.GetRequiredService<INavigateToContactsListCommand>()
+        ServiceProvider.GetRequiredService<INavigateToComponentSampleListCommand>()
                        .Navigate();
     }
 

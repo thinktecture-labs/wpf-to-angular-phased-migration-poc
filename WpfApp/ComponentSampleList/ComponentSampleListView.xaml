@@ -1,15 +1,15 @@
-﻿<UserControl x:Class="WpfApp.ContactsList.ContactListView"
+﻿<UserControl x:Class="WpfApp.ComponentSampleList.ComponentSampleListView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:shared="clr-namespace:WpfApp.Shared"
-             xmlns:contactsList="clr-namespace:WpfApp.ContactsList"
+             xmlns:componentSampleList="clr-namespace:WpfApp.ComponentSampleList"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="580"
-             d:DataContext="{d:DesignInstance Type=contactsList:ContactListViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance Type=componentSampleList:ComponentSampleListViewModel, IsDesignTimeCreatable=False}"
              Background="{DynamicResource MaterialDesignPaper}">
     <UserControl.Resources>
         <Style x:Key="ListBoxItemTextBlock" TargetType="{x:Type TextBlock}">
@@ -28,32 +28,32 @@
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch">
-                <Button Command="{Binding CreateContactCommand, Mode=OneTime}">
+                <Button Command="{Binding CreateSampleCommand, Mode=OneTime}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Add"
                                                  Width="24"
                                                  Height="24" />
-                        <TextBlock Text="Add Contact"
+                        <TextBlock Text="Add Sample"
                                    Margin="8 0 0 0"
                                    VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
                 
                 <Button Margin="12 0 0 0"
-                        Command="{Binding EditContactCommand, Mode=OneTime}">
+                        Command="{Binding EditSampleCommand, Mode=OneTime}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Edit" />
-                        <TextBlock Text="Edit Contact"
+                        <TextBlock Text="Edit Sample"
                                    Margin="8 0 0 0"
                                    VerticalAlignment="Center" />
                     </StackPanel>
                 </Button>
                 
                 <Button Margin="12 0 0 0"
-                        Command="{Binding DeleteContactCommand, Mode=OneTime}">
+                        Command="{Binding DeleteSampleCommand, Mode=OneTime}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Delete" />
-                        <TextBlock Text="Delete Contact"
+                        <TextBlock Text="Delete Sample"
                                    Margin="8 0 0 0"
                                    VerticalAlignment="Center" />
                     </StackPanel>
@@ -83,20 +83,19 @@
                  Grid.Row="2"
                  Grid.IsSharedSizeScope="True"
                  ItemsSource="{Binding PagingViewModel.Items, Mode=OneTime}"
-                 SelectedItem="{Binding SelectedContact, Mode=TwoWay}">
+                 SelectedItem="{Binding SelectedSample, Mode=TwoWay}">
             <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type shared:Contact}">
+                <DataTemplate DataType="{x:Type shared:ComponentSample}">
                     <Grid Height="50">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="FirstName" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="LastName" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Email" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="DateOfBirth" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="ComponentName" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="MigrationTime" />
+                            <ColumnDefinition Width="Auto" SharedSizeGroup="Peak Area" />
                         </Grid.ColumnDefinitions>
                         
                         <materialDesign:PackIcon Grid.Column="0"
-                                                 Kind="Account"
+                                                 Kind="TestTube"
                                                  Width="32"
                                                  Height="32"
                                                  VerticalAlignment="Center"
@@ -104,16 +103,14 @@
                         
                         <TextBlock Grid.Column="1"
                                    Style="{StaticResource ListBoxItemTextBlock}"
-                                   Text="{Binding FirstName, Mode=OneTime}" />
+                                   Text="{Binding ComponentName, Mode=OneTime}" />
                         <TextBlock Grid.Column="2"
                                    Style="{StaticResource ListBoxItemTextBlock}"
-                                   Text="{Binding LastName, Mode=OneTime}" />
+                                   Text="{Binding MigrationTime, Mode=OneTime, StringFormat=hh\\:mm\\:ss}" />
                         <TextBlock Grid.Column="3"
                                    Style="{StaticResource ListBoxItemTextBlock}"
-                                   Text="{Binding Email, Mode=OneTime}" />
-                        <TextBlock Grid.Column="4"
-                                   Style="{StaticResource ListBoxItemTextBlock}"
-                                   Text="{Binding DateOfBirth, Mode=OneTime}" />
+                                   HorizontalAlignment="Right"
+                                   Text="{Binding PeakArea, Mode=OneTime, StringFormat={}{0:N3} RFU}" />
                     </Grid>
                 </DataTemplate>
             </ListBox.ItemTemplate>

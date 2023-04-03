@@ -3,42 +3,42 @@ using System.Threading.Tasks;
 using Serilog;
 using WpfApp.Shared;
 
-namespace WpfApp.DeleteContactDialog;
+namespace WpfApp.DeleteComponentSampleDialog;
 
 public sealed class ConfirmDeletionViewModel
 {
-    public ConfirmDeletionViewModel(Contact contact,
-                                    Func<IDeleteContactSession> createSession,
+    public ConfirmDeletionViewModel(ComponentSample componentSample,
+                                    Func<IDeleteSampleSession> createSession,
                                     INotificationPublisher notificationPublisher,
                                     ILogger logger)
     {
-        Contact = contact;
+        ComponentSample = componentSample;
         CreateSession = createSession;
         NotificationPublisher = notificationPublisher;
         Logger = logger;
     }
 
-    public Contact Contact { get; }
-    private Func<IDeleteContactSession> CreateSession { get; }
+    public ComponentSample ComponentSample { get; }
+    private Func<IDeleteSampleSession> CreateSession { get; }
     private INotificationPublisher NotificationPublisher { get; }
     private ILogger Logger { get; }
 
-    public async Task<bool> DeleteContactAsync()
+    public async Task<bool> DeleteSampleAsync()
     {
         try
         {
             using var session = CreateSession();
-            await session.DeleteContactAsync(Contact.Id);
+            await session.DeleteSampleAsync(ComponentSample.Id);
             NotificationPublisher.PublishNotification(
-                $"{Contact.FirstName} {Contact.LastName} was deleted successfully"
+                $"{ComponentSample.ComponentName} was deleted successfully"
             );
             return true;
         }
         catch (Exception exception)
         {
-            Logger.Error(exception, "Could not delete contact");
+            Logger.Error(exception, "Could not delete sample");
             NotificationPublisher.PublishNotification(
-                $"Could not delete {Contact.FirstName} {Contact.LastName}",
+                $"Could not delete {ComponentSample.ComponentName}",
                 NotificationLevel.Error
             );
             return false;

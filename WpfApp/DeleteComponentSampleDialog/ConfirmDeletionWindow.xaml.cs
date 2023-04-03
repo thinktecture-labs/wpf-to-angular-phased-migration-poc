@@ -1,7 +1,7 @@
 ﻿using System.Windows;
 using MahApps.Metro.Controls;
 
-namespace WpfApp.DeleteContactDialog;
+namespace WpfApp.DeleteComponentSampleDialog;
 
 // ReSharper disable once RedundantExtendsListEntry
 public sealed partial class ConfirmDeletionWindow : MetroWindow
@@ -21,7 +21,7 @@ public sealed partial class ConfirmDeletionWindow : MetroWindow
         if (DataContext is not ConfirmDeletionViewModel viewModel)
             return;
 
-        DialogResult = await viewModel.DeleteContactAsync();
+        DialogResult = await viewModel.DeleteSampleAsync();
         Close();
     }
 }

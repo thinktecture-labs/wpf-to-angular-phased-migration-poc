@@ -7,7 +7,7 @@
                  xmlns:wpfApp="clr-namespace:WpfApp"
                  xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                  mc:Ignorable="d"
-                 Title="WPF App with Chromium Embedded Framework"
+                 Title="Component Samples"
                  TitleCharacterCasing="Normal"
                  WindowStartupLocation="CenterScreen"
                  Width="800"

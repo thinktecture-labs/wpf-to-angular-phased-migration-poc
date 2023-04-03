@@ -1,14 +1,14 @@
-﻿<UserControl x:Class="WpfApp.ContactForm.ContactFormView"
+﻿<UserControl x:Class="WpfApp.ComponentSampleForm.ComponentSampleFormView"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:contactForm="clr-namespace:WpfApp.ContactForm"
+             xmlns:componentSampleForm="clr-namespace:WpfApp.ComponentSampleForm"
              mc:Ignorable="d"
              d:DesignWidth="400"
              d:DesignHeight="500"
-             d:DataContext="{d:DesignInstance Type=contactForm:ContactFormViewModel, IsDesignTimeCreatable=False}"
+             d:DataContext="{d:DesignInstance Type=componentSampleForm:ComponentSampleFormViewModel, IsDesignTimeCreatable=False}"
              Background="{DynamicResource MaterialDesignPaper}">
     <StackPanel VerticalAlignment="Center"
                 HorizontalAlignment="Center"
@@ -20,27 +20,21 @@
         
         <TextBox Margin="0 12"
                  Style="{StaticResource MaterialDesignFilledTextBox}"
-                 materialDesign:HintAssist.Hint="First Name"
+                 materialDesign:HintAssist.Hint="Component Name"
                  IsEnabled="{Binding IsInputEnabled, Mode=OneWay}"
-                 Text="{Binding FirstName, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}" />
+                 Text="{Binding ComponentName, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}" />
 
         <TextBox Margin="0 12"
                  Style="{StaticResource MaterialDesignFilledTextBox}"
-                 materialDesign:HintAssist.Hint="Last Name"
+                 materialDesign:HintAssist.Hint="Migration Time (hh:mm:ss)"
                  IsEnabled="{Binding IsInputEnabled, Mode=OneWay}"
-                 Text="{Binding LastName, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}" />
-
-        <TextBox Margin="0 12"
-                 Style="{StaticResource MaterialDesignFilledTextBox}"
-                 materialDesign:HintAssist.Hint="Email"
-                 IsEnabled="{Binding IsInputEnabled, Mode=OneWay}"
-                 Text="{Binding Email, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}" />
+                 Text="{Binding MigrationTimeText, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}" />
         
-        <DatePicker Margin="0 12"
-                    Style="{StaticResource MaterialDesignFilledDatePicker}"
-                    materialDesign:HintAssist.Hint="Date of Birth"
-                    IsEnabled="{Binding IsInputEnabled, Mode=OneWay}"
-                    SelectedDate="{Binding DateOfBirth, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}"/>
+        <TextBox Margin="0 12"
+                 Style="{StaticResource MaterialDesignFilledTextBox}"
+                 materialDesign:HintAssist.Hint="Peak Area (RFU)"
+                 IsEnabled="{Binding IsInputEnabled, Mode=OneWay}"
+                 Text="{Binding PeakArea, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}" />
         
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"

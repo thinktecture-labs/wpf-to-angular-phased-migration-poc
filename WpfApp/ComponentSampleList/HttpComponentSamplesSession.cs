@@ -8,13 +8,13 @@ using Light.GuardClauses;
 using WpfApp.Http;
 using WpfApp.Shared;
 
-namespace WpfApp.ContactsList;
+namespace WpfApp.ComponentSampleList;
 
-public sealed class HttpContactsSession : BaseHttpSession, IContactsSession
+public sealed class HttpComponentSamplesSession : BaseHttpSession, IComponentSamplesSession
 {
-    public HttpContactsSession(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
+    public HttpComponentSamplesSession(IHttpClientFactory httpClientFactory) : base(httpClientFactory) { }
     
-    public Task<List<Contact>> GetItemsAsync(ContactListFilters filters, int skip, int take, CancellationToken cancellationToken)
+    public Task<List<ComponentSample>> GetItemsAsync(SampleListFilters filters, int skip, int take, CancellationToken cancellationToken)
     {
         var queryParameters = HttpUtility.ParseQueryString(string.Empty);
         queryParameters.Add(nameof(skip), skip.ToString());
@@ -23,7 +23,7 @@ public sealed class HttpContactsSession : BaseHttpSession, IContactsSession
         if (!searchTerm.IsNullOrWhiteSpace())
             queryParameters.Add(nameof(searchTerm), searchTerm);
 
-        var relativeUrl = "/api/contacts?" + queryParameters;
-        return HttpClient.GetFromJsonAsync<List<Contact>>(relativeUrl, JsonOptions, cancellationToken)!;
+        var relativeUrl = "/api/componentSamples?" + queryParameters;
+        return HttpClient.GetFromJsonAsync<List<ComponentSample>>(relativeUrl, JsonOptions, cancellationToken)!;
     }
 }

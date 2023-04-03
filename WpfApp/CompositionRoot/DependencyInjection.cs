@@ -3,9 +3,9 @@ using Light.GuardClauses;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using WpfApp.ContactForm;
-using WpfApp.ContactsList;
-using WpfApp.DeleteContactDialog;
+using WpfApp.ComponentSampleForm;
+using WpfApp.ComponentSampleList;
+using WpfApp.DeleteComponentSampleDialog;
 using WpfApp.Http;
 using WpfApp.Shared;
 
@@ -16,9 +16,9 @@ public static class DependencyInjection
     public static ServiceProvider CreateServiceProvider(IConfiguration configuration) =>
         new ServiceCollection().AddCoreServices(configuration)
                                .AddMainWindow()
-                               .AddContactList()
-                               .AddContactForm()
-                               .AddDeleteContactDialog()
+                               .AddComponentSampleList()
+                               .AddComponentSampleForm()
+                               .AddDeleteSampleDialog()
                                .BuildServiceProvider();
 
     private static IServiceCollection AddCoreServices(this IServiceCollection services, IConfiguration configuration)
