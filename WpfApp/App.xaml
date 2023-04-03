@@ -9,7 +9,7 @@
                 <materialDesign:MahAppsBundledTheme
                     BaseTheme="Dark"
                     PrimaryColor="Teal"
-                    SecondaryColor="Indigo"
+                    SecondaryColor="Red"
                     ColorAdjustment="{materialDesign:ColorAdjustment DesiredContrastRatio=5, Colors=All, Contrast=Medium}" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Controls.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MahApps.Metro;component/Styles/Fonts.xaml" />

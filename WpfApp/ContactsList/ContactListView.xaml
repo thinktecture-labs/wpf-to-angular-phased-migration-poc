@@ -39,7 +39,8 @@
                     </StackPanel>
                 </Button>
                 
-                <Button Margin="12 0 0 0">
+                <Button Margin="12 0 0 0"
+                        Command="{Binding EditContactCommand, Mode=OneTime}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Edit" />
                         <TextBlock Text="Edit Contact"
@@ -48,7 +49,8 @@
                     </StackPanel>
                 </Button>
                 
-                <Button Margin="12 0 0 0">
+                <Button Margin="12 0 0 0"
+                        Command="{Binding DeleteContactCommand, Mode=OneTime}">
                     <StackPanel Orientation="Horizontal">
                         <materialDesign:PackIcon Kind="Delete" />
                         <TextBlock Text="Delete Contact"
@@ -80,7 +82,8 @@
         <ListBox x:Name="ListBox"
                  Grid.Row="2"
                  Grid.IsSharedSizeScope="True"
-                 ItemsSource="{Binding PagingViewModel.Items, Mode=OneTime}">
+                 ItemsSource="{Binding PagingViewModel.Items, Mode=OneTime}"
+                 SelectedItem="{Binding SelectedContact, Mode=TwoWay}">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type shared:Contact}">
                     <Grid Height="50">
