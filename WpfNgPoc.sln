@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CefSharp.WpfApp", "CefSharp.WpfApp\CefSharp.WpfApp.csproj", "{D5C0E782-0A12-458E-BC3E-8B308EE22BBD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WpfApp", "WpfApp\WpfApp.csproj", "{D5C0E782-0A12-458E-BC3E-8B308EE22BBD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Backend", "Backend\Backend.csproj", "{52670E02-2AF1-4E4F-8966-282B44A92253}"
 EndProject
