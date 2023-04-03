@@ -13,6 +13,7 @@ public static class ContactFormModule
                 .AddSingleton<Func<Contact, ContactFormViewModel>>(sp =>
                  {
                      return contact => new (contact,
+                                            sp.GetRequiredService<INotificationPublisher>(),
                                             sp.GetRequiredService<INavigateToContactsListCommand>(),
                                             sp.GetRequiredService<Func<IContactFormSession>>(),
                                             sp.GetRequiredService<ILogger>());

@@ -35,7 +35,8 @@ public static class DependencyInjection
         services.AddSingleton<MainWindow>()
                 .AddSingleton<Func<MainWindow>>(sp => sp.GetRequiredService<MainWindow>)
                 .AddSingleton<MainWindowViewModel>()
-                .AddTransient<INavigator>(sp => sp.GetRequiredService<MainWindowViewModel>());
+                .AddTransient<INavigator>(sp => sp.GetRequiredService<MainWindowViewModel>())
+                .AddTransient<INotificationPublisher>(sp => sp.GetRequiredService<MainWindowViewModel>());
 
     private static string DetermineBackendUrl(IConfiguration configuration)
     {

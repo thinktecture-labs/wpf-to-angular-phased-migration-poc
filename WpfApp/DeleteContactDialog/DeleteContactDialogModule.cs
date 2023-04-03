@@ -15,6 +15,7 @@ public static class DeleteContactDialogModule
                  {
                      return contact => new (contact,
                                             sp.GetRequiredService<Func<IDeleteContactSession>>(),
+                                            sp.GetRequiredService<INotificationPublisher>(),
                                             sp.GetRequiredService<ILogger>());
                  })
                 .AddSingleton<IShowConfirmDeletionDialogCommand, ShowConfirmDeletionDialogCommand>();

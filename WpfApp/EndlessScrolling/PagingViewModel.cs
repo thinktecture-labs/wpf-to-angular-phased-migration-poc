@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Light.GuardClauses;
 using Light.ViewModels;
 using Serilog;
+using WpfApp.Shared;
 
 namespace WpfApp.EndlessScrolling;
 
@@ -19,15 +20,18 @@ public sealed class PagingViewModel<TItem, TFilters> : BaseNotifyPropertyChanged
     public PagingViewModel(Func<IPagingSession<TItem, TFilters>> createSession,
                            int pageSize,
                            TFilters initialFilters,
+                           INotificationPublisher notificationPublisher,
                            ILogger logger)
     {
         CreateSession = createSession;
+        NotificationPublisher = notificationPublisher;
         _filters = initialFilters;
         Logger = logger;
         PageSize = pageSize.MustBeGreaterThan(0);
     }
 
     private Func<IPagingSession<TItem, TFilters>> CreateSession { get; }
+    private INotificationPublisher NotificationPublisher { get; }
     private ILogger Logger { get; }
     public int PageSize { get; }
     public ObservableCollection<TItem> Items { get; } = new ();
@@ -41,19 +45,19 @@ public sealed class PagingViewModel<TItem, TFilters> : BaseNotifyPropertyChanged
             ReloadAsync();
         }
     }
-    
+
     public bool IsAtEnd
     {
         get => _isAtEnd;
         private set => SetIfDifferent(ref _isAtEnd, value);
     }
-    
+
     public bool HasNoItems
     {
         get => _hasNoItems;
         private set => SetIfDifferent(ref _hasNoItems, value);
     }
-    
+
     private CancellationTokenSource? CurrentCancellationTokenSource
     {
         get => _currentCancellationTokenSource;
@@ -63,9 +67,9 @@ public sealed class PagingViewModel<TItem, TFilters> : BaseNotifyPropertyChanged
             OnPropertyChanged(nameof(IsLoading));
         }
     }
-    
+
     public bool IsLoading => CurrentCancellationTokenSource is not null;
-    
+
     public async Task LoadNextPageAsync()
     {
         if (IsAtEnd || HasNoItems)
@@ -94,6 +98,10 @@ public sealed class PagingViewModel<TItem, TFilters> : BaseNotifyPropertyChanged
         catch (Exception exception)
         {
             Logger.Error(exception, "Could not load items");
+            NotificationPublisher.PublishNotification(
+                "Could not load items - please check if the service is running and reachable",
+                NotificationLevel.Error
+            );
         }
         finally
         {
@@ -102,7 +110,7 @@ public sealed class PagingViewModel<TItem, TFilters> : BaseNotifyPropertyChanged
                 CurrentCancellationTokenSource = null;
         }
     }
-    
+
     public Task ReloadAsync(bool resetHasNoItems = false)
     {
         IsAtEnd = false;

@@ -9,13 +9,14 @@ namespace WpfApp.ContactForm;
 
 public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
 {
-    private string _firstName;
-    private string _lastName;
-    private string _email;
-    private bool _isInputEnabled = true;
     private DateTime? _dateOfBirth;
+    private string _email;
+    private string _firstName;
+    private bool _isInputEnabled = true;
+    private string _lastName;
 
     public ContactFormViewModel(Contact contact,
+                                INotificationPublisher notificationPublisher,
                                 INavigateToContactsListCommand navigateToContactsListCommand,
                                 Func<IContactFormSession> createSession,
                                 ILogger logger)
@@ -26,6 +27,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         _dateOfBirth = contact.DateOfBirth.ToDateTime(new ());
 
         Contact = contact;
+        NotificationPublisher = notificationPublisher;
         NavigateToContactsListCommand = navigateToContactsListCommand;
         CreateSession = createSession;
         Logger = logger;
@@ -33,8 +35,9 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         CancelCommand = new (Cancel);
         SaveCommand = new (Save, () => !ValidationManager.HasErrors);
     }
-    
+
     private Contact Contact { get; }
+    private INotificationPublisher NotificationPublisher { get; }
     private INavigateToContactsListCommand NavigateToContactsListCommand { get; }
     private Func<IContactFormSession> CreateSession { get; }
     private ILogger Logger { get; }
@@ -60,7 +63,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         {
             if (!SetIfDifferent(ref _lastName, value))
                 return;
-            
+
             Validate(value, ValidateName);
             SaveCommand.RaiseCanExecuteChanged();
         }
@@ -73,7 +76,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         {
             if (!SetIfDifferent(ref _email, value))
                 return;
-            
+
             Validate(value, ValidateEmail);
             SaveCommand.RaiseCanExecuteChanged();
         }
@@ -86,7 +89,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         {
             if (!SetIfDifferent(ref _dateOfBirth, value))
                 return;
-            
+
             Validate(value, ValidateDateOfBirth);
             SaveCommand.RaiseCanExecuteChanged();
         }
@@ -97,7 +100,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         get => _isInputEnabled;
         private set => SetIfDifferent(ref _isInputEnabled, value);
     }
-    
+
     public DelegateCommand CancelCommand { get; }
     public DelegateCommand SaveCommand { get; }
 
@@ -105,7 +108,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
     {
         if (value.IsNullOrWhiteSpace() || value.Length > 200)
             return "Please provide 1 to 200 characters";
-        
+
         return ValidationResult<string>.Valid;
     }
 
@@ -121,9 +124,9 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         var lastIndexOfAtSign = value.LastIndexOf('@');
         if (indexOfAtSign != lastIndexOfAtSign)
             goto Failed;
-        
+
         return ValidationResult<string>.Valid;
-        
+
         Failed:
         return "Please provide a valid email address";
     }
@@ -141,7 +144,7 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         var eighteenYearsAgo = now.AddYears(-18);
         if (dateOnly > eighteenYearsAgo)
             return "The contact must be at least 18 years old";
-        
+
         return ValidationResult<string>.Valid;
     }
 
@@ -170,18 +173,27 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         Contact.Email = Email;
         Contact.DateOfBirth = DateOnly.FromDateTime(_dateOfBirth!.Value);
 
+        var isNewContact = Contact.Id == Guid.Empty;
         try
         {
             using var session = CreateSession();
 
-            if (Contact.Id == Guid.Empty)
+            if (isNewContact)
             {
                 Contact.Id = Guid.NewGuid();
                 await session.CreateContactAsync(Contact);
+                NotificationPublisher.PublishNotification(
+                    $"{Contact.FirstName} {Contact.LastName} was created successfully",
+                    NotificationLevel.Success
+                );
             }
             else
             {
                 await session.UpdateContactAsync(Contact);
+                NotificationPublisher.PublishNotification(
+                    $"{Contact.FirstName} {Contact.LastName} was updated successfully",
+                    NotificationLevel.Success
+                );
             }
 
             NavigateToContactsListCommand.Navigate();
@@ -189,6 +201,10 @@ public sealed class ContactFormViewModel : BaseNotifyDataErrorInfo
         catch (Exception exception)
         {
             Logger.Error(exception, "Could not create or update contact");
+            NotificationPublisher.PublishNotification(
+                $"Could not {(isNewContact ? "create" : "update")} {Contact.FirstName} {Contact.LastName}",
+                NotificationLevel.Error
+            );
         }
         finally
         {

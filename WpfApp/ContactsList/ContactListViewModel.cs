@@ -14,13 +14,14 @@ public sealed class ContactListViewModel : BaseNotifyPropertyChanged, IHasPaging
     private Contact? _selectedContact;
 
     public ContactListViewModel(Func<IContactsSession> createSession,
+                                INotificationPublisher notificationPublisher,
                                 INavigateToContactFormCommand navigateToContactFormCommand,
                                 IShowConfirmDeletionDialogCommand showConfirmDeletionDialogCommand,
                                 ILogger logger)
     {
         NavigateToContactFormCommand = navigateToContactFormCommand;
         ShowConfirmDeletionDialogCommand = showConfirmDeletionDialogCommand;
-        PagingViewModel = new (createSession, 30, new (string.Empty), logger);
+        PagingViewModel = new (createSession, 30, new (string.Empty), notificationPublisher, logger);
 
         CreateContactCommand = new (CreateContact);
         EditContactCommand = new (EditContact, () => SelectedContact is not null);
