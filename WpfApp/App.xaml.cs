@@ -12,7 +12,8 @@ public sealed partial class App : Application
     public App()
     {
         Log.Logger = Logging.CreateLogger();
-        ServiceProvider = DependencyInjection.CreateServiceProvider();
+        var configuration = Configuration.Create();
+        ServiceProvider = DependencyInjection.CreateServiceProvider(configuration);
     }
     
     private ServiceProvider ServiceProvider { get; }
@@ -29,5 +30,9 @@ public sealed partial class App : Application
                        .Navigate();
     }
 
-    protected override void OnExit(ExitEventArgs e) => ServiceProvider.Dispose();
+    protected override void OnExit(ExitEventArgs e)
+    {
+        Log.CloseAndFlush();
+        ServiceProvider.Dispose();
+    }
 }
