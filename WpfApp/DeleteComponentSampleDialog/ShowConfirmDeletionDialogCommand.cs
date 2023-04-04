@@ -5,21 +5,21 @@ namespace WpfApp.DeleteComponentSampleDialog;
 
 public sealed class ShowConfirmDeletionDialogCommand : IShowConfirmDeletionDialogCommand
 {
-    public ShowConfirmDeletionDialogCommand(Func<ComponentSample, ConfirmDeletionViewModel> createViewModel,
+    public ShowConfirmDeletionDialogCommand(Func<INotificationPublisher> resolveNotificationPublisher,
                                             Func<MainWindow> resolveMainWindow)
     {
-        CreateViewModel = createViewModel;
+        ResolveNotificationPublisher = resolveNotificationPublisher;
         ResolveMainWindow = resolveMainWindow;
     }
 
-    private Func<ComponentSample, ConfirmDeletionViewModel> CreateViewModel { get; }
+    private Func<INotificationPublisher> ResolveNotificationPublisher { get; }
     private Func<MainWindow> ResolveMainWindow { get; }
 
     public bool ShowDialog(ComponentSample componentSample)
     {
-        var viewModel = CreateViewModel(componentSample);
+        var notificationPublisher = ResolveNotificationPublisher();
         var mainWindow = ResolveMainWindow();
-        var view = new ConfirmDeletionWindow(viewModel){ Owner = mainWindow };
+        var view = new ConfirmDeletionWindow(componentSample, notificationPublisher){ Owner = mainWindow };
         return view.ShowDialog() == true;
     }
 }

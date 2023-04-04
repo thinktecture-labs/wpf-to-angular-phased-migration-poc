@@ -2,7 +2,7 @@
 
 public enum NotificationLevel
 {
-    Info,
-    Success,
-    Error
+    Info = 0,
+    Success = 1,
+    Error = 2
 }
