@@ -4,6 +4,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using WpfApp.ComponentSampleList;
 using WpfApp.CompositionRoot;
+using WpfApp.Shared;
 
 namespace WpfApp;
 
@@ -22,6 +23,8 @@ public sealed partial class App : Application
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
+        
+        ChromiumEmbedded.InitializeAndMeasure(ServiceProvider.GetRequiredService<ChronometerFactory>());
 
         try
         {

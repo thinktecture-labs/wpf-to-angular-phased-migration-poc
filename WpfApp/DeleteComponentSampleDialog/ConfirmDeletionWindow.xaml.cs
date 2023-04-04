@@ -12,16 +12,11 @@ public sealed partial class ConfirmDeletionWindow : MetroWindow
 
     private void OnCancelClicked(object sender, RoutedEventArgs e)
     {
-        DialogResult = false;
         Close();
     }
 
     private async void OnDeleteClicked(object sender, RoutedEventArgs e)
     {
-        if (DataContext is not ConfirmDeletionViewModel viewModel)
-            return;
-
-        DialogResult = await viewModel.DeleteSampleAsync();
         Close();
     }
 }

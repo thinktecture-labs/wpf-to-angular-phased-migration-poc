@@ -3,59 +3,20 @@
                  xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
                  xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
                  xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-                 xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
                  xmlns:mah="http://metro.mahapps.com/winfx/xaml/controls"
                  xmlns:deleteComponentSampleDialog="clr-namespace:WpfApp.DeleteComponentSampleDialog"
+                 xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
                  mc:Ignorable="d"
                  Title="Confirm Deletion..."
                  TitleCharacterCasing="Normal"
                  Width="420"
-                 SizeToContent="Height"
+                 Height="260"
                  WindowStartupLocation="CenterOwner"
                  ResizeMode="NoResize"
                  WindowTitleBrush="{DynamicResource SecondaryHueDarkBrush}"
                  Style="{StaticResource MaterialDesignWindow}"
                  FontFamily="{DynamicResource MahApps.Fonts.Family.Window.Title}"
                  TitleForeground="{DynamicResource MaterialDesignBody}"
-                 GlowBrush="{DynamicResource SecondaryHueMidBrush}"
-                 d:DataContext="{d:DesignInstance Type=deleteComponentSampleDialog:ConfirmDeletionViewModel, IsDesignTimeCreatable=False}">
-    <StackPanel Margin="20">
-        <TextBlock Text="Do you really want to delete the sample?"
-                   Style="{StaticResource MaterialDesignHeadline6TextBlock}" />
-        <TextBlock Margin="0 8 0 0">
-            <Run Text="{Binding ComponentSample.ComponentName, Mode=OneTime}" />
-            <LineBreak />
-            <Run Text="{Binding ComponentSample.MigrationTime, Mode=OneTime, StringFormat=hh\\:mm\\:ss}" />
-            <LineBreak />
-            <Run Text="{Binding ComponentSample.PeakArea, Mode=OneTime, StringFormat={}{0:N3} RFU}" />
-        </TextBlock>
-
-        <StackPanel Orientation="Horizontal"
-                    HorizontalAlignment="Right"
-                    Margin="0 20 0 0">
-            <Button Width="100"
-                    Style="{StaticResource MaterialDesignPaperSecondaryButton}"
-                    IsCancel="True"
-                    Click="OnCancelClicked">
-                <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Cancel"
-                                             VerticalAlignment="Center" />
-                    <TextBlock Text="Cancel"
-                               Margin="8 0 0 0" />
-                </StackPanel>
-            </Button>
-            <Button Width="100"
-                    Margin="12 0 0 0"
-                    IsDefault="True"
-                    Click="OnDeleteClicked"
-                    Style="{StaticResource MaterialDesignRaisedSecondaryButton}">
-                <StackPanel Orientation="Horizontal">
-                    <materialDesign:PackIcon Kind="Check"
-                                             VerticalAlignment="Center" />
-                    <TextBlock Text="Delete"
-                               Margin="8 0 0 0" />
-                </StackPanel>
-            </Button>
-        </StackPanel>
-    </StackPanel>
+                 GlowBrush="{DynamicResource SecondaryHueMidBrush}">
+    <wpf:ChromiumWebBrowser x:Name="ChromiumWebBrowser" />
 </mah:MetroWindow>
