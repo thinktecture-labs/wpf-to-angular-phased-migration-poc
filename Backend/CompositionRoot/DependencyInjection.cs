@@ -16,6 +16,7 @@ public static class DependencyInjection
                .AddLightValidation()
                .AddDataAccess()
                .AddComponentSampleEndpoints()
+               .AddSinglePageApplication()
                .AddHealthChecks();
         return builder;
     }

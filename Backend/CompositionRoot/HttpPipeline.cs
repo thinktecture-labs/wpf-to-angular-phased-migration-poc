@@ -1,5 +1,6 @@
 ﻿using Backend.ComponentSamples;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Serilog;
 
@@ -12,10 +13,12 @@ public static class HttpPipeline
         if (app.Environment.IsDevelopment())
             app.UseDeveloperExceptionPage();
 
+        app.UseSpaStaticFiles();
         app.UseSerilogRequestLogging();
         app.UseRouting();
-        app.MapHealthChecks("/");
+        app.MapHealthChecks("/health");
         app.MapComponentSampleEndpoints();
+        app.UseSpa(spa => spa.Options.SourcePath = "./angular-app");
 
         return app;
     }
