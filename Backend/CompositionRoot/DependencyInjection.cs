@@ -13,6 +13,7 @@ public static class DependencyInjection
         builder.UseSerilog();
 
         builder.Services
+               .AddCorsIfNecessary(builder.Environment)
                .AddLightValidation()
                .AddDataAccess()
                .AddComponentSampleEndpoints()

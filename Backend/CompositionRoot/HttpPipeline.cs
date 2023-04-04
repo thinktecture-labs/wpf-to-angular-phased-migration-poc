@@ -13,6 +13,7 @@ public static class HttpPipeline
         if (app.Environment.IsDevelopment())
             app.UseDeveloperExceptionPage();
 
+        app.UseCorsIfNecessary();
         app.UseSpaStaticFiles();
         app.UseSerilogRequestLogging();
         app.UseRouting();
