@@ -25,9 +25,9 @@
         <TextBlock Margin="0 8 0 0">
             <Run Text="{Binding ComponentSample.ComponentName, Mode=OneTime}" />
             <LineBreak />
-            <Run Text="{Binding ComponentSample.MigrationTime, Mode=OneTime}" />
+            <Run Text="{Binding ComponentSample.MigrationTime, Mode=OneTime, StringFormat=hh\\:mm\\:ss}" />
             <LineBreak />
-            <Run Text="{Binding ComponentSample.PeakArea, Mode=OneTime}" />
+            <Run Text="{Binding ComponentSample.PeakArea, Mode=OneTime, StringFormat={}{0:N3} RFU}" />
         </TextBlock>
 
         <StackPanel Orientation="Horizontal"
