@@ -1,4 +1,4 @@
-<div class="outer-flex-container">
+<div class="outer-flex-container" *ngIf="componentSample$ | async as componentSample">
     <div class="inner-flex-container">
         <h3>Do you really want to delete the sample?</h3>
         <div class="mat-body-1">

@@ -1,27 +1,28 @@
-import { Component } from '@angular/core';
-
-interface IComponentSample {
-  id: string;
-  componentName: string;
-  migrationTime: string;
-  peakArea: number;
-}
+import { Observable } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
+import { Component, OnInit } from '@angular/core';
+import { ActivatedRoute, ParamMap } from '@angular/router';
+import { ComponentSampleService, IComponentSample } from '../component-sample.service';
 
 @Component({
   selector: 'app-delete-sample',
   templateUrl: './delete-sample.component.html',
   styleUrls: ['./delete-sample.component.scss']
 })
-export class DeleteSampleComponent {
-  componentSample: IComponentSample;
+export class DeleteSampleComponent implements OnInit {
 
-  constructor() {
-    this.componentSample = {
-      id: "9208313f-d222-444b-8ae4-9811116efb52",
-      componentName: "Nicotine (C10H14N2)",
-      migrationTime: "00:20:13",
-      peakArea: 915388
-    };
+  componentSample$!: Observable<IComponentSample>;
+
+  constructor(
+    private route: ActivatedRoute,
+    private service: ComponentSampleService
+  ) { }
+
+  ngOnInit(): void {
+    this.componentSample$ = this.route.paramMap.pipe(
+      switchMap((params: ParamMap) =>
+        this.service.getComponentSample(params.get('id')!))
+    );
   }
 
   onCancelClicked(): void {
