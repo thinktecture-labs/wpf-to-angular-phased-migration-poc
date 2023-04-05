@@ -41,3 +41,8 @@ body { margin: 0; font-family: 'Segoe UI', Roboto, "Helvetica Neue", sans-serif;
 .form-button {
   min-width: 110px !important;
 }
+
+// Hide the list item 
+.mdc-list-item__end {
+  display: none !important;
+}

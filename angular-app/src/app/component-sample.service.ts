@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 
@@ -22,5 +22,14 @@ export class ComponentSampleService {
 
   deleteComponentSample(id: string): Observable<Object> {
     return this.httpClient.delete('http://localhost:5000/api/componentSamples/' + id);
+  }
+
+  getComponentSamples(skip: number, take: number, searchTerm: string): Observable<IComponentSample[]> {
+    const params = new HttpParams()
+      .set('skip', skip)
+      .set('take', take)
+      .set('searchTerm', searchTerm);
+      
+    return this.httpClient.get<IComponentSample[]>('http://localhost:5000/api/componentSamples', { params });
   }
 }
