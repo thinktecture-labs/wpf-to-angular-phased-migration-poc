@@ -1,7 +1,8 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { AfterViewInit, Component, NgZone, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ComponentSampleService, IComponentSample } from '../component-sample.service';
 import { MatSelectionListChange } from '@angular/material/list';
-import { Subject, takeUntil } from 'rxjs';
+import { Subject, filter, map, pairwise, takeUntil } from 'rxjs';
+import { CdkVirtualScrollViewport } from '@angular/cdk/scrolling';
 
 interface ICefSharp {
   BindObjectAsync(name: string): Promise<any>;
@@ -21,19 +22,39 @@ declare let samplesListBoundObject: ISamplesListBoundObject;
   templateUrl: './component-list.component.html',
   styleUrls: ['./component-list.component.scss']
 })
-export class ComponentListComponent implements OnInit, OnDestroy {
+export class ComponentListComponent implements OnInit, OnDestroy, AfterViewInit {
+
+  @ViewChild('viewport') viewport!: CdkVirtualScrollViewport;
 
   componentSamples?: IComponentSample[];
   private readonly take = 30;
-  private searchTerm: string = "";
+  private searchTerm: string = '';
   private currentCancellationSubject$?: Subject<void>;
+  private isAtEnd: boolean = false;
 
-  constructor(private componentSampleService: ComponentSampleService) { }
-
+  constructor(
+    private componentSampleService: ComponentSampleService,
+    private ngZone: NgZone) { }
 
   ngOnInit(): void {
     this.tryBindToWpfHost();
     this.load();
+  }
+
+  ngAfterViewInit(): void {
+
+    const heightOfTwoElements = 140;
+
+    this.viewport
+      .elementScrolled()
+      .pipe(
+        map(() => this.viewport.measureScrollOffset('bottom')),
+        pairwise(),
+        filter(([y1, y2]) => (y2 < y1 && y2 < heightOfTwoElements)),
+      )
+      .subscribe(() =>
+        this.load()
+      );
   }
 
   private async tryBindToWpfHost(): Promise<any> {
@@ -58,13 +79,22 @@ export class ComponentListComponent implements OnInit, OnDestroy {
   }
 
   private setSearchTerm(searchTerm: string): void {
-    if (searchTerm !== this.searchTerm)
-      this.load();
+    if (searchTerm === this.searchTerm)
+      return;
+
+    this.searchTerm = searchTerm;
+    this.ngZone.run(() => {
+      this.componentSamples = undefined;
+    });
+    this.cancelOngoingRequestIfNecessary();
+    this.isAtEnd = false;
+    this.load();
   }
 
   private load() {
 
-    this.cleanUpCancellationSubjectIfNecessary();
+    if (this.currentCancellationSubject$ || this.isAtEnd)
+      return;
 
     const cancellationSubjectForThisRequest = new Subject<void>();
     this.currentCancellationSubject$ = cancellationSubjectForThisRequest;
@@ -72,24 +102,30 @@ export class ComponentListComponent implements OnInit, OnDestroy {
     this.componentSampleService
       .getComponentSamples(skip, this.take, this.searchTerm)
       .pipe(takeUntil(this.currentCancellationSubject$))
-      .subscribe((componentSamples) => {
-        if (!this.componentSamples)
-          this.componentSamples = componentSamples;
-        else
-          this.componentSamples.push(...componentSamples);
+      .subscribe((loadedSamples) => {
 
-        if (Object.is(this.currentCancellationSubject$, cancellationSubjectForThisRequest)) {
-          cancellationSubjectForThisRequest.complete();
-          this.currentCancellationSubject$ = undefined;
+        if (loadedSamples.length > 0) {
+          this.ngZone.run(() => {
+            if (!this.componentSamples)
+              this.componentSamples = loadedSamples;
+            else
+              this.componentSamples = [...this.componentSamples, ...loadedSamples];
+          });
         }
+        
+        if (loadedSamples.length < this.take)
+          this.isAtEnd = true;
+
+        cancellationSubjectForThisRequest.complete();
+        this.currentCancellationSubject$ = undefined;
       });
   }
 
   ngOnDestroy(): void {
-    this.cleanUpCancellationSubjectIfNecessary();
+    this.cancelOngoingRequestIfNecessary();
   }
 
-  private cleanUpCancellationSubjectIfNecessary(): void {
+  private cancelOngoingRequestIfNecessary(): void {
     if (this.currentCancellationSubject$) {
       this.currentCancellationSubject$.next();
       this.currentCancellationSubject$.complete();
