@@ -1,6 +1,4 @@
-﻿using System.Windows;
-using System.Windows.Controls;
-using WpfApp.EndlessScrolling;
+﻿using System.Windows.Controls;
 
 namespace WpfApp.ComponentSampleList;
 
@@ -12,9 +10,12 @@ public sealed partial class ComponentSampleListView : UserControl
     public ComponentSampleListView(ComponentSampleListViewModel viewModel) : this()
     {
         DataContext = viewModel;
-        Loaded += OnLoaded;
+        viewModel.BoundObject.Dispatcher = Dispatcher;
+        ChromiumWebBrowser.JavascriptObjectRepository.ResolveObject += (_, e) =>
+        {
+            const string boundObjectName = "samplesListBoundObject";
+            if (e.ObjectName == boundObjectName)
+                e.ObjectRepository.Register(boundObjectName, viewModel.BoundObject);
+        };
     }
-
-    private void OnLoaded(object sender, RoutedEventArgs e) =>
-        ListBoxPager<ComponentSampleListViewModel>.EnableEndlessScrolling(this, ListBox);
 }

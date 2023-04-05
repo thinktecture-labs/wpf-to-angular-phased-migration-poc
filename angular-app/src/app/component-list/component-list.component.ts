@@ -12,6 +12,7 @@ declare let CefSharp: ICefSharp;
 
 interface ISamplesListBoundObject {
   registerSetSearchTerm(setSearchTerm: (searchTerm: string) => void): void;
+  registerReload(reload: () => void): void;
   selectedSampleChanged(guid: string): void;
 }
 
@@ -63,6 +64,7 @@ export class ComponentListComponent implements OnInit, OnDestroy, AfterViewInit 
 
     await CefSharp.BindObjectAsync('samplesListBoundObject');
     samplesListBoundObject.registerSetSearchTerm(this.setSearchTerm);
+    samplesListBoundObject.registerReload(this.reload);
   }
 
   onSelectionChanged(event: MatSelectionListChange) {
@@ -83,6 +85,10 @@ export class ComponentListComponent implements OnInit, OnDestroy, AfterViewInit 
       return;
 
     this.searchTerm = searchTerm;
+    this.reload();
+  }
+
+  private reload(): void {
     this.ngZone.run(() => {
       this.componentSamples = undefined;
     });
@@ -112,7 +118,7 @@ export class ComponentListComponent implements OnInit, OnDestroy, AfterViewInit 
               this.componentSamples = [...this.componentSamples, ...loadedSamples];
           });
         }
-        
+
         if (loadedSamples.length < this.take)
           this.isAtEnd = true;
 

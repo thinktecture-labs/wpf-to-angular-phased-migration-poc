@@ -15,11 +15,10 @@ public sealed class NavigateToComponentSampleListCommand : INavigateToComponentS
     private INavigator Navigator { get; }
     private Func<ComponentSampleListViewModel> CreateComponentSampleListViewModel { get; }
 
-    public async void Navigate()
+    public void Navigate()
     {
         var viewModel = CreateComponentSampleListViewModel();
         var view = new ComponentSampleListView(viewModel);
         Navigator.Show(view);
-        await viewModel.PagingViewModel.LoadNextPageAsync();
     }
 }

@@ -3,12 +3,11 @@ using Light.ViewModels;
 using Serilog;
 using WpfApp.ComponentSampleForm;
 using WpfApp.DeleteComponentSampleDialog;
-using WpfApp.EndlessScrolling;
 using WpfApp.Shared;
 
 namespace WpfApp.ComponentSampleList;
 
-public sealed class ComponentSampleListViewModel : BaseNotifyPropertyChanged, IHasPagingViewModel
+public sealed class ComponentSampleListViewModel : BaseNotifyPropertyChanged
 {
     private string _searchTerm = string.Empty;
     private ComponentSample? _selectedSample;
@@ -19,18 +18,24 @@ public sealed class ComponentSampleListViewModel : BaseNotifyPropertyChanged, IH
                                         IShowConfirmDeletionDialogCommand showConfirmDeletionDialogCommand,
                                         ILogger logger)
     {
+        CreateSession = createSession;
+        NotificationPublisher = notificationPublisher;
         NavigateToFormCommand = navigateToFormCommand;
         ShowConfirmDeletionDialogCommand = showConfirmDeletionDialogCommand;
-        PagingViewModel = new (createSession, 30, new (string.Empty), notificationPublisher, logger);
+        Logger = logger;
+        BoundObject = new (this, logger);
 
         CreateSampleCommand = new (CreateSample);
         EditSampleCommand = new (EditSample, () => SelectedSample is not null);
         DeleteSampleCommand = new (DeleteSample, () => SelectedSample is not null);
     }
 
-    public PagingViewModel<ComponentSample, SampleListFilters> PagingViewModel { get; }
+    private Func<IComponentSamplesSession> CreateSession { get; }
+    private INotificationPublisher NotificationPublisher { get; }
     private INavigateToFormCommand NavigateToFormCommand { get; }
     private IShowConfirmDeletionDialogCommand ShowConfirmDeletionDialogCommand { get; }
+    private ILogger Logger { get; }
+    public SampleListBoundObject BoundObject { get; }
 
     public ComponentSample? SelectedSample
     {
@@ -51,15 +56,13 @@ public sealed class ComponentSampleListViewModel : BaseNotifyPropertyChanged, IH
         set
         {
             if (SetIfDifferent(ref _searchTerm, value))
-                PagingViewModel.Filters = new (value);
+                BoundObject.SetSearchTerm(value);
         }
     }
 
     public DelegateCommand CreateSampleCommand { get; }
     public DelegateCommand EditSampleCommand { get; }
     public DelegateCommand DeleteSampleCommand { get; }
-
-    IPagingViewModel IHasPagingViewModel.PagingViewModel => PagingViewModel;
 
     private void CreateSample() => NavigateToFormCommand.Navigate(new ());
 
@@ -76,6 +79,29 @@ public sealed class ComponentSampleListViewModel : BaseNotifyPropertyChanged, IH
 
         var wasSampleDeleted = ShowConfirmDeletionDialogCommand.ShowDialog(SelectedSample);
         if (wasSampleDeleted)
-            await PagingViewModel.ReloadAsync();
+            await BoundObject.ReloadAsync();
+    }
+
+    public async void OnSelectedSampleChanged(string sampleId)
+    {
+        if (!Guid.TryParse(sampleId, out var parsedId))
+        {
+            SelectedSample = null;
+            return;
+        }
+
+        try
+        {
+            using var session = CreateSession();
+            SelectedSample = await session.GetComponentSampleAsync(parsedId);
+        }
+        catch (Exception exception)
+        {
+            Logger.Error(exception, "Could not load sample");
+            NotificationPublisher.PublishNotification(
+                "Could not load sample",
+                NotificationLevel.Error
+            );
+        }
     }
 }

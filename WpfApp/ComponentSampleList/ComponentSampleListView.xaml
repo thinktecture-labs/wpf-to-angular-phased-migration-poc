@@ -4,23 +4,16 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
-             xmlns:shared="clr-namespace:WpfApp.Shared"
              xmlns:componentSampleList="clr-namespace:WpfApp.ComponentSampleList"
+             xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d"
              d:DesignWidth="800"
              d:DesignHeight="580"
              d:DataContext="{d:DesignInstance Type=componentSampleList:ComponentSampleListViewModel, IsDesignTimeCreatable=False}"
              Background="{DynamicResource MaterialDesignPaper}">
-    <UserControl.Resources>
-        <Style x:Key="ListBoxItemTextBlock" TargetType="{x:Type TextBlock}">
-            <Setter Property="VerticalAlignment" Value="Center" />
-            <Setter Property="Margin" Value="12 0" />
-        </Style>
-    </UserControl.Resources>
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="50" />
-            <RowDefinition Height="8" />
             <RowDefinition />
         </Grid.RowDefinitions>
 
@@ -74,47 +67,11 @@
                 </materialDesign:HintAssist.Hint>
             </TextBox>
         </Grid>
-
-        <ProgressBar Grid.Row="1"
-                     IsIndeterminate="True"
-                     Visibility="{Binding Path=PagingViewModel.IsLoading, Mode=OneWay, Converter={StaticResource HiddenVisibilityConverter}}" />
-
-        <ListBox x:Name="ListBox"
-                 Grid.Row="2"
-                 Grid.IsSharedSizeScope="True"
-                 ItemsSource="{Binding PagingViewModel.Items, Mode=OneTime}"
-                 SelectedItem="{Binding SelectedSample, Mode=TwoWay}">
-            <ListBox.ItemTemplate>
-                <DataTemplate DataType="{x:Type shared:ComponentSample}">
-                    <Grid Height="50"
-                          Margin="8 0">
-                        <Grid.ColumnDefinitions>
-                            <ColumnDefinition Width="50" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="ComponentName" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="MigrationTime" />
-                            <ColumnDefinition Width="Auto" SharedSizeGroup="Peak Area" />
-                        </Grid.ColumnDefinitions>
-                        
-                        <materialDesign:PackIcon Grid.Column="0"
-                                                 Kind="TestTube"
-                                                 Width="32"
-                                                 Height="32"
-                                                 VerticalAlignment="Center"
-                                                 HorizontalAlignment="Center" />
-                        
-                        <TextBlock Grid.Column="1"
-                                   Style="{StaticResource ListBoxItemTextBlock}"
-                                   Text="{Binding ComponentName, Mode=OneTime}" />
-                        <TextBlock Grid.Column="2"
-                                   Style="{StaticResource ListBoxItemTextBlock}"
-                                   Text="{Binding MigrationTime, Mode=OneTime, StringFormat=hh\\:mm\\:ss}" />
-                        <TextBlock Grid.Column="3"
-                                   Style="{StaticResource ListBoxItemTextBlock}"
-                                   HorizontalAlignment="Right"
-                                   Text="{Binding PeakArea, Mode=OneTime, StringFormat={}{0:N3} RFU}" />
-                    </Grid>
-                </DataTemplate>
-            </ListBox.ItemTemplate>
-        </ListBox>
+        
+        <wpf:ChromiumWebBrowser x:Name="ChromiumWebBrowser"
+                                Grid.Row="1"
+                                Margin="0 8 0 0"
+                                Address="http://localhost:5000/componentSamples">
+        </wpf:ChromiumWebBrowser>
     </Grid>
 </UserControl>
