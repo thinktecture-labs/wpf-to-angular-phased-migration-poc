@@ -17,13 +17,13 @@ public sealed partial class App : Application
         var configuration = Configuration.Create();
         ServiceProvider = DependencyInjection.CreateServiceProvider(configuration);
     }
-    
+
     private ServiceProvider ServiceProvider { get; }
-    
+
     protected override void OnStartup(StartupEventArgs e)
     {
         base.OnStartup(e);
-        
+
         ChromiumEmbedded.InitializeAndMeasure(ServiceProvider.GetRequiredService<ChronometerFactory>());
 
         try
@@ -31,7 +31,7 @@ public sealed partial class App : Application
             var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
             MainWindow = mainWindow;
             MainWindow.Show();
-        
+
             ServiceProvider.GetRequiredService<INavigateToComponentSampleListCommand>()
                            .Navigate();
         }
