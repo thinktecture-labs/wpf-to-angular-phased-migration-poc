@@ -4,6 +4,8 @@
 bin/
 obj/
 node_modules/
+dist/
+.angular/
 *.user
 *.suo
 appsettings.*.json
