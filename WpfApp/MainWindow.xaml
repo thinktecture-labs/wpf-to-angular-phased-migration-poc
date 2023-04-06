@@ -20,7 +20,7 @@
                  GlowBrush="{DynamicResource PrimaryHueMidBrush}"
                  d:DataContext="{d:DesignInstance Type=wpfApp:MainWindowViewModel, IsDesignTimeCreatable=False}"
                  WindowTransitionsEnabled="False">
-    <Grid Margin="8">
+    <Grid>
         <mah:TransitioningContentControl Content="{Binding CurrentView, Mode=OneWay}" />
         <materialDesign:Snackbar MessageQueue="{Binding SnackbarMessageQueue, Mode=OneTime}"
                                  ActionButtonStyle="{DynamicResource MaterialDesignSnackbarActionDarkButton}" />

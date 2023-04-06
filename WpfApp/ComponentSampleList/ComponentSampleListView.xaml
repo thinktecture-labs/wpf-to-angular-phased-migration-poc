@@ -24,7 +24,7 @@
             <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Grid Grid.Row="0">
+        <Grid Grid.Row="0" Margin="8 8 20 0">
             <StackPanel Orientation="Horizontal"
                         HorizontalAlignment="Left"
                         VerticalAlignment="Stretch">
@@ -86,7 +86,8 @@
                  SelectedItem="{Binding SelectedSample, Mode=TwoWay}">
             <ListBox.ItemTemplate>
                 <DataTemplate DataType="{x:Type shared:ComponentSample}">
-                    <Grid Height="50">
+                    <Grid Height="50"
+                          Margin="8 0">
                         <Grid.ColumnDefinitions>
                             <ColumnDefinition Width="50" />
                             <ColumnDefinition Width="Auto" SharedSizeGroup="ComponentName" />
