@@ -42,14 +42,17 @@ public sealed class SampleListBoundObject
         }
     }
 
-    public async void SetSearchTerm(string searchTerm)
+    public async void SetSearchTerm(string? searchTerm)
     {
         if (SetSearchTermCallback is null)
             throw new InvalidOperationException("You must bind this object before setting the search term");
 
         try
         {
-            await SetSearchTermCallback.ExecuteAsync(searchTerm);
+            // If search term is null and we call the JavaScript callback, Cef will
+            // actually pass the string "null" which is a wrong search term. Thus,
+            // we explicitly pass string.Empty if searchTerm is null.
+            await SetSearchTermCallback.ExecuteAsync(searchTerm ?? string.Empty);
         }
         catch (Exception exception)
         {

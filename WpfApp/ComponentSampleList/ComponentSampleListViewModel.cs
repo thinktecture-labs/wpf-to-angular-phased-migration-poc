@@ -9,7 +9,7 @@ namespace WpfApp.ComponentSampleList;
 
 public sealed class ComponentSampleListViewModel : BaseNotifyPropertyChanged
 {
-    private string _searchTerm = string.Empty;
+    private string? _searchTerm = string.Empty;
     private ComponentSample? _selectedSample;
 
     public ComponentSampleListViewModel(Func<IComponentSamplesSession> createSession,
@@ -50,7 +50,7 @@ public sealed class ComponentSampleListViewModel : BaseNotifyPropertyChanged
         }
     }
 
-    public string SearchTerm
+    public string? SearchTerm
     {
         get => _searchTerm;
         set
