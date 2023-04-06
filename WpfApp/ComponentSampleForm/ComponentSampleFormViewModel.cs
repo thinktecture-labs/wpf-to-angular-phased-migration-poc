@@ -1,7 +1,11 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Globalization;
 using Light.GuardClauses;
 using Light.ViewModels;
+using OxyPlot;
+using OxyPlot.Axes;
+using OxyPlot.Series;
 using Serilog;
 using WpfApp.ComponentSampleList;
 using WpfApp.Shared;
@@ -12,11 +16,12 @@ public sealed class ComponentSampleFormViewModel : BaseNotifyDataErrorInfo
 {
     private string _componentName;
     private bool _isInputEnabled = true;
-    private decimal _peakArea;
     private string _migrationTimeText;
     private TimeSpan _parsedMigrationTime;
+    private decimal _peakArea;
 
     public ComponentSampleFormViewModel(ComponentSample componentSample,
+                                        List<ComponentSample> allSamples,
                                         INotificationPublisher notificationPublisher,
                                         INavigateToComponentSampleListCommand navigateToComponentSampleListCommand,
                                         Func<ISampleFormSession> createSession,
@@ -35,6 +40,8 @@ public sealed class ComponentSampleFormViewModel : BaseNotifyDataErrorInfo
 
         CancelCommand = new (Cancel);
         SaveCommand = new (Save, () => !ValidationManager.HasErrors);
+
+        PlotModel = CreatePlotModel(allSamples, componentSample);
     }
 
     private ComponentSample ComponentSample { get; }
@@ -92,6 +99,8 @@ public sealed class ComponentSampleFormViewModel : BaseNotifyDataErrorInfo
     public DelegateCommand CancelCommand { get; }
     public DelegateCommand SaveCommand { get; }
 
+    public PlotModel PlotModel { get; }
+
     private static ValidationResult<string> ValidateName(string value)
     {
         if (value.IsNullOrWhiteSpace() || value.Length > 200)
@@ -110,9 +119,7 @@ public sealed class ComponentSampleFormViewModel : BaseNotifyDataErrorInfo
         if (TimeSpan.TryParse(text, CultureInfo.CurrentCulture, out parsedTimeSpan) &&
             parsedTimeSpan >= TimeSpan.FromSeconds(3) &&
             parsedTimeSpan <= TimeSpan.FromHours(1))
-        {
             return ValidationResult<string>.Valid;
-        }
 
         return "The migration time must be between 3 seconds and 1 hour";
     }
@@ -177,5 +184,36 @@ public sealed class ComponentSampleFormViewModel : BaseNotifyDataErrorInfo
         {
             IsInputEnabled = true;
         }
+    }
+
+    private static PlotModel CreatePlotModel(List<ComponentSample> allSamples, ComponentSample currentSample)
+    {
+        var plotModel = new PlotModel { Title = "Electrophoresis" };
+        plotModel.Axes.Add(new TimeSpanAxis { Position = AxisPosition.Bottom, Unit = "Migration Time" });
+        plotModel.Axes.Add(new LogarithmicAxis { Position = AxisPosition.Left, Unit = "RFU" });
+
+        var otherComponentsSeries = new ScatterSeries { Title = "Other components" };
+        foreach (var sample in allSamples)
+        {
+            if (sample.Id == currentSample.Id)
+                continue;
+
+            otherComponentsSeries.Points.Add(new (TimeSpanAxis.ToDouble(sample.MigrationTime),
+                                                  Convert.ToDouble(sample.PeakArea),
+                                                  1.0,
+                                                  tag: sample.ComponentName));
+        }
+
+        plotModel.Series.Add(otherComponentsSeries);
+
+        var currentSampleSeries = new ScatterSeries { Title = currentSample.ComponentName };
+        currentSampleSeries.Points.Add(new (TimeSpanAxis.ToDouble(currentSample.MigrationTime),
+                                            Convert.ToDouble(currentSample.PeakArea),
+                                            4.0,
+                                            tag: currentSample.ComponentName));
+        
+        plotModel.Series.Add(currentSampleSeries);
+
+        return plotModel;
     }
 }
