@@ -5,25 +5,28 @@
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
              xmlns:componentSampleForm="clr-namespace:WpfApp.ComponentSampleForm"
-             xmlns:oxy="http://oxyplot.org/wpf"
+             xmlns:wpf="clr-namespace:CefSharp.Wpf;assembly=CefSharp.Wpf"
              mc:Ignorable="d"
              d:DesignWidth="400"
              d:DesignHeight="500"
              d:DataContext="{d:DesignInstance Type=componentSampleForm:ComponentSampleFormViewModel, IsDesignTimeCreatable=False}"
              Background="{DynamicResource MaterialDesignPaper}">
-    <StackPanel VerticalAlignment="Center"
-                HorizontalAlignment="Center"
-                Width="300">
-        
-        <oxy:PlotView Width="300"
-                      Height="240"
-                      Model="{Binding PlotModel, Mode=OneWay}"/>
-                      
-        
+
+    <StackPanel
+        VerticalAlignment="Center"
+        HorizontalAlignment="Center"
+        Width="400">
+
+        <wpf:ChromiumWebBrowser
+            x:Name="ChromiumWebBrowser"
+            Address="http://localhost:5000/componentSamples/chart"
+            Height="260"/>
+
+
         <TextBlock Style="{StaticResource MaterialDesignHeadline5TextBlock}"
                    Text="{Binding Title, Mode=OneTime}"
                    Margin="0 20 0 12" />
-        
+
         <TextBox Margin="0 12"
                  Style="{StaticResource MaterialDesignFilledTextBox}"
                  materialDesign:HintAssist.Hint="Component Name"
@@ -35,26 +38,26 @@
                  materialDesign:HintAssist.Hint="Migration Time (hh:mm:ss)"
                  IsEnabled="{Binding IsInputEnabled, Mode=OneWay}"
                  Text="{Binding MigrationTimeText, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}" />
-        
+
         <TextBox Margin="0 12"
                  Style="{StaticResource MaterialDesignFilledTextBox}"
                  materialDesign:HintAssist.Hint="Peak Area (RFU)"
                  IsEnabled="{Binding IsInputEnabled, Mode=OneWay}"
                  Text="{Binding PeakArea, Mode=TwoWay, Delay=400, ValidatesOnNotifyDataErrors=True}" />
-        
+
         <StackPanel Orientation="Horizontal"
                     HorizontalAlignment="Right"
                     Margin="0 20 0 0">
-            
+
             <Button Width="100"
                     Style="{StaticResource MaterialDesignPaperButton}"
                     IsCancel="True"
                     Command="{Binding CancelCommand, Mode=OneTime}">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="Cancel"
-                                             VerticalAlignment="Center"/>
+                                             VerticalAlignment="Center" />
                     <TextBlock Text="Cancel"
-                               Margin="8 0 0 0"/>
+                               Margin="8 0 0 0" />
                 </StackPanel>
             </Button>
             <Button Width="100"
@@ -63,7 +66,7 @@
                     Command="{Binding SaveCommand, Mode=OneTime}">
                 <StackPanel Orientation="Horizontal">
                     <materialDesign:PackIcon Kind="Check"
-                                             VerticalAlignment="Center"/>
+                                             VerticalAlignment="Center" />
                     <TextBlock Text="Save"
                                Margin="8 0 0 0" />
                 </StackPanel>

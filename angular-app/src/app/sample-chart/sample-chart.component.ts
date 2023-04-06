@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, NgZone, OnInit } from '@angular/core';
 import 'chartjs-adapter-date-fns';
 import { ChartConfiguration } from 'chart.js';
 import { IComponentSample } from '../component-sample.service';
@@ -29,6 +29,8 @@ export class SampleChartComponent implements OnInit {
       xAxis: {
         position: 'bottom',
         type: 'time',
+        min: '00:00:00',
+        max: '01:00:00',
         time: {
           parser: 'HH:mm:ss',
           unit: 'second',
@@ -44,8 +46,6 @@ export class SampleChartComponent implements OnInit {
 
       yAxis: {
         type: 'logarithmic',
-        min: 0.1,
-        max: 10000000,
         title: {
           display: true,
           text: "RFU"
@@ -55,13 +55,18 @@ export class SampleChartComponent implements OnInit {
     }
   }
 
+  constructor(private ngZone: NgZone) { }
+
   ngOnInit(): void {
     this.tryBindToWpfHost();
   }
 
   private async tryBindToWpfHost(): Promise<any> {
     if (typeof (CefSharp) === "undefined") {
-      this.chartData = this.createSampleChartData();
+
+      setTimeout(() => {
+        this.chartData = this.createSampleChartData();
+      }, 1000);
       return;
     }
 
@@ -69,24 +74,24 @@ export class SampleChartComponent implements OnInit {
     chartBoundObject.registerSetChartData((allSamples, currentSample) => this.createChartData(allSamples, currentSample));
   }
 
-  private createChartData(allSamples: IComponentSample[], currentSample: IComponentSample): ChartConfiguration<'scatter', { x: string, y: number }[]>['data'] {
-    const otherSamplesData = [];
+  private createChartData(allSamples: IComponentSample[], currentSample: IComponentSample) {
+    const otherSamplesData: any = [];
 
     for (const sample of allSamples) {
-      if (currentSample.id === sample.id)
-        continue;
-
-      otherSamplesData.push({ x: sample.migrationTime, y: sample.peakArea });
+      if (currentSample.id !== sample.id)
+        otherSamplesData.push({ x: sample.migrationTime, y: sample.peakArea });
     }
 
     const currentSampleData = [{ x: currentSample.migrationTime, y: currentSample.peakArea }];
 
-    return {
-      datasets: [
-        { data: otherSamplesData, pointRadius: 3, pointBackgroundColor: '#999999' },
-        { data: currentSampleData, pointRadius: 7, pointBackgroundColor: '#ff8200' }
-      ]
-    }
+    this.ngZone.run(() => {
+      this.chartData = {
+        datasets: [
+          { data: otherSamplesData, pointRadius: 3, pointBackgroundColor: '#999999' },
+          { data: currentSampleData, pointRadius: 7, pointBackgroundColor: '#ff8200' }
+        ]
+      }
+    });
 
   }
 
@@ -100,7 +105,14 @@ export class SampleChartComponent implements OnInit {
             { x: '00:40:20', y: 8000000 }
           ],
           pointRadius: 5,
-          pointBackgroundColor: '#333'
+          pointBackgroundColor: '#999999'
+        },
+        {
+          data: [
+            { x: '00:24:10', y: 4300187 }
+          ],
+          pointRadius: 9,
+          pointBackgroundColor: '#ff8200'
         }
       ]
     };
