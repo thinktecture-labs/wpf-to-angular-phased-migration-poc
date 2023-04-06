@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using WpfApp.ComponentSampleList;
@@ -22,12 +23,20 @@ public sealed partial class App : Application
     {
         base.OnStartup(e);
 
-        var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
-        MainWindow = mainWindow;
-        MainWindow.Show();
+        try
+        {
+            var mainWindow = ServiceProvider.GetRequiredService<MainWindow>();
+            MainWindow = mainWindow;
+            MainWindow.Show();
         
-        ServiceProvider.GetRequiredService<INavigateToComponentSampleListCommand>()
-                       .Navigate();
+            ServiceProvider.GetRequiredService<INavigateToComponentSampleListCommand>()
+                           .Navigate();
+        }
+        catch (Exception exception)
+        {
+            Log.Fatal(exception, "Could not start WPF app");
+            Shutdown(1);
+        }
     }
 
     protected override void OnExit(ExitEventArgs e)
