@@ -63,8 +63,12 @@ export class ComponentListComponent implements OnInit, OnDestroy, AfterViewInit 
       return;
 
     await CefSharp.BindObjectAsync('samplesListBoundObject');
-    samplesListBoundObject.registerSetSearchTerm(this.setSearchTerm);
-    samplesListBoundObject.registerReload(this.reload);
+
+    // You cannot simply pass "this.setSearchTerm" here because "this" would not be captured
+    // correctly in this case (instead of "this" being the angular component instance, it would
+    // be changed to the Chromium top-level object)
+    samplesListBoundObject.registerSetSearchTerm(searchTerm => this.setSearchTerm(searchTerm));
+    samplesListBoundObject.registerReload(() => this.reload());
   }
 
   onSelectionChanged(event: MatSelectionListChange) {
@@ -80,7 +84,7 @@ export class ComponentListComponent implements OnInit, OnDestroy, AfterViewInit 
     samplesListBoundObject.selectedSampleChanged(value.id);
   }
 
-  private setSearchTerm(searchTerm: string): void {
+  setSearchTerm(searchTerm: string): void {
     if (searchTerm === this.searchTerm)
       return;
 
@@ -88,7 +92,7 @@ export class ComponentListComponent implements OnInit, OnDestroy, AfterViewInit 
     this.reload();
   }
 
-  private reload(): void {
+  reload(): void {
     this.ngZone.run(() => {
       this.componentSamples = undefined;
     });
