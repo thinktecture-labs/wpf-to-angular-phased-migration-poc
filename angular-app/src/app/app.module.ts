@@ -12,12 +12,15 @@ import { ComponentListComponent } from './component-list/component-list.componen
 import { MatListModule } from '@angular/material/list';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { ScrollingModule } from '@angular/cdk/scrolling';
+import { SampleChartComponent } from './sample-chart/sample-chart.component';
+import { NgChartsModule } from 'ng2-charts';
 
 @NgModule({
   declarations: [
     AppComponent,
     DeleteSampleComponent,
-    ComponentListComponent
+    ComponentListComponent,
+    SampleChartComponent
   ],
   imports: [
     BrowserModule,
@@ -28,7 +31,8 @@ import { ScrollingModule } from '@angular/cdk/scrolling';
     HttpClientModule,
     MatListModule,
     MatProgressSpinnerModule,
-    ScrollingModule
+    ScrollingModule,
+    NgChartsModule
   ],
   providers: [],
   bootstrap: [AppComponent]
