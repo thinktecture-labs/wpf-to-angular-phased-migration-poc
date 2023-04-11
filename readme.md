@@ -2,6 +2,11 @@
 
 *This proof of concept shows you how a WPF app can be gradually transformed to an Angular app.*
 
+Goals:
+- Demonstrate seamless use of web based components inside a WPF application for users
+- Open up a path for a step by step reduction of WPF components for the project which could lead to a complete web based solution to meet future needs for the product without beeing forced into a "big bang"-strategy
+- Discribe architectural requirements and show how they are used
+
 ## Architecture and Design
 
  This example is a distributed app with a desktop app and an HTTP service which offer basic CRUD operations for component samples. We have a list view with infinite scrolling that displays all samples and allows searching, a form where a single component sample can be created or edited, and a dialog where users have to confirm the deletion of a sample. A single component sample consists of the following properties:
