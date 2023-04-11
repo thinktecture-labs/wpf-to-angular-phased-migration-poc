@@ -7,6 +7,18 @@ Goals:
 - Open up a path for a step by step reduction of WPF components for the project which could lead to a complete web based solution to meet future needs for the product without beeing forced into a "big bang"-strategy
 - Discribe architectural requirements and show how they are used
 
+## TL;DR;
+
+This repo contains a `main` and the `angular-app` branch.
+
+The former represents a classical WPF-solution-architecture:
+![Default architecture](images/default-architecture.png)
+
+The latter the architecture enabling the use of web based components:
+![Architecture changes with Angular](images/architecture-with-angular.png)
+
+> Not adressed: 100% web based solution using of (e.g.) [Electron](https://www.electronjs.org/) or [Progressive](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) / [Isolated](https://chromestatus.com/feature/5146307550248960) Web App approach.
+
 ## Architecture and Design
 
  This example is a distributed app with a desktop app and an HTTP service which offer basic CRUD operations for component samples. We have a list view with infinite scrolling that displays all samples and allows searching, a form where a single component sample can be created or edited, and a dialog where users have to confirm the deletion of a sample. A single component sample consists of the following properties:
