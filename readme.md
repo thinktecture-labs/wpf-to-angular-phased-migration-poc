@@ -14,10 +14,27 @@ This repo contains a `main` and the `angular-app` branch.
 The former represents a classical WPF-solution-architecture:
 ![Default architecture](images/default-architecture.png)
 
-The latter the architecture enabling the use of web based components:
+In the latter branch, the architecture differs to enable the hosting of web based components in a WPF app:
 ![Architecture changes with Angular](images/architecture-with-angular.png)
 
-> Not adressed: 100% web based solution using of (e.g.) [Electron](https://www.electronjs.org/) or [Progressive](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) / [Isolated](https://chromestatus.com/feature/5146307550248960) Web App approach.
+> Not adressed: 100% web based solution using [Electron](https://www.electronjs.org/) or [Progressive](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) / [Isolated](https://chromestatus.com/feature/5146307550248960) Web App approach.
+
+
+## How to build and run the example
+
+### Prerequisites
+
+To run this example, you need the [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) as well as [NodeJS](https://nodejs.org/en) installed on your Windows computer. The .NET SDK is usually installed when you have an up-to-date version of Visual Studio.
+
+### ASP.NET Core Backend
+
+The easiest way to run the ASP.NET Core backend is to execute the `run-backend.cmd` file in a terminal of your choice on a Windows machine. This script builds the ASP.NET Core service, builds the Angular app (if available) and copies the resulting bundle over to the ASP.NET Core service, and then starts the service. You can terminate the service by simply pressing `CTRL+C` in your terminal. The backend is hosted on `http://localhost:5000`.
+
+You can also debug the backend using an IDE of your choice. Keep in mind that you need to build the Angular app with `ng build --configuration production` and copy over the `./angular-app/dist/angular-app` folder into the `./Backend/bin/Debug/net7.0` folder when you are on the angular-app branch.
+
+### WPF app
+
+Similarly to the backend, you can simply execute the `run-wpf-app.cmd` in a terminal on a Windows machine. Please keep in mind that the backend must be running so that the WPF app can perform HTTP requests against it.
 
 ## Architecture and Design
 
@@ -87,19 +104,3 @@ In the form view, the chart is now rendered with Angular. This example demonstra
 ![Delete Dialog with Angular](images/delete-dialog-with-angular.png)
 
 Finally, we have the delete dialog, which is now completely rendered in Angular. It shows how the Angular app performs HTTP calls to the backend and afterwards instructs the WPF host to navigate (close the Dialog window).
-
-## How to build and run the example
-
-### Prerequisites
-
-To run this example, you need the [.NET 7 SDK](https://dotnet.microsoft.com/en-us/download/dotnet/7.0) as well as [NodeJS](https://nodejs.org/en) installed on your Windows computer. The .NET SDK is usually installed when you have an up-to-date version of Visual Studio.
-
-### ASP.NET Core Backend
-
-The easiest way to run the ASP.NET Core backend is to execute the `run-backend.cmd` file in a terminal of your choice on a Windows machine. This script builds the ASP.NET Core service, builds the Angular app (if available) and copies the resulting bundle over to the ASP.NET Core service, and then starts the service. You can terminate the service by simply pressing `CTRL+C` in your terminal. The backend is hosted on `http://localhost:5000`.
-
-You can also debug the backend using an IDE of your choice. Keep in mind that you need to build the Angular app with `ng build --configuration production` and copy over the `./angular-app/dist/angular-app` folder into the `./Backend/bin/Debug/net7.0` folder when you are on the angular-app branch.
-
-### WPF app
-
-Similarly to the backend, you can simply execute the `run-wpf-app.cmd` in a terminal on a Windows machine. Please keep in mind that the backend must be running so that the WPF app can perform HTTP requests against it.
